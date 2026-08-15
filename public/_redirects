@@ -1,0 +1,4 @@
+# Single-page app: every path must be answered with index.html so a direct link
+# to /comics or /comics/123 does not 404. Netlify reads this from the published
+# folder; Vercel's CRA preset does the same thing on its own.
+/*  /index.html  200
