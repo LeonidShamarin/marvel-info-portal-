@@ -5,16 +5,17 @@ export const useHttp = () => {
   const [error, setError] = useState(null);
 
   const request = useCallback(
-    async (
-      url,
-      method = "GET",
-      body = null,
-      headers = { "Content-Type": "application/json" }
-    ) => {
+    async (url, method = "GET", body = null, headers = null) => {
       setLoading(true);
 
+      // A Content-Type header on a GET makes the request non-simple, which
+      // forces a CORS preflight; static hosts (GitHub Pages, jsdelivr) do not
+      // answer OPTIONS, so the fetch fails outright. Send it only with a body.
+      const finalHeaders =
+        headers ?? (body ? { "Content-Type": "application/json" } : undefined);
+
       try {
-        const response = await fetch(url, { method, body, headers });
+        const response = await fetch(url, { method, body, headers: finalHeaders });
 
         if (!response.ok) {
           throw new Error(`Could not fetch ${url}, status: ${response.status}`);

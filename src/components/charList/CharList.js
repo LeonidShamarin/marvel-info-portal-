@@ -9,7 +9,9 @@ import "./charList.scss";
 const CharList = (props) => {
   const [charList, setCharList] = useState([]);
   const [newItemLoading, setNewItemLoading] = useState(false);
-  const [offset, setOffset] = useState(210);
+  // 210 was an offset into the old Marvel API, where earlier ids were empty
+  // placeholder entries. This dataset is sorted by name, so it starts at 0.
+  const [offset, setOffset] = useState(0);
   const [charEnded, setCharEnded] = useState(false);
 
   const { loading, error, getAllCharacters } = useMarvelService();

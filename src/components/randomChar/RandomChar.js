@@ -8,7 +8,7 @@ import mjolnir from "../../resources/img/mjolnir.png";
 
 const RandomChar = () => {
   const [char, setChar] = useState(null);
-  const { loading, error, getCharacter, clearError } = useMarvelService();
+  const { loading, error, getRandomCharacter, clearError } = useMarvelService();
 
   useEffect(() => {
     updateChar();
@@ -28,8 +28,9 @@ const RandomChar = () => {
 
   const updateChar = () => {
     clearError();
-    const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
-    getCharacter(id).then(onCharLoaded);
+    // The old version guessed an id inside a hard-coded range and hoped it
+    // existed; the dataset is loaded once, so a random pick is exact.
+    getRandomCharacter().then(onCharLoaded);
   };
 
   const errorMessage = error ? <ErrorMessage /> : null;
@@ -59,30 +60,33 @@ const RandomChar = () => {
 
 const View = ({ char }) => {
   const { name, description, thumbnail, homepage, wiki } = char;
-  let imgStyle = { objectFit: "cover" };
-  if (
-    thumbnail ===
-    "http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg"
-  ) {
-    imgStyle = { objectFit: "contain" };
-  }
 
   return (
     <div className="randomchar__block">
       <img
         src={thumbnail}
-        alt="Random character"
+        alt={name}
         className="randomchar__img"
-        style={imgStyle}
+        style={{ objectFit: "cover" }}
       />
       <div className="randomchar__info">
         <p className="randomchar__name">{name}</p>
         <p className="randomchar__descr">{description}</p>
         <div className="randomchar__btns">
-          <a href={homepage} className="button button__main">
-            <div className="inner">homepage</div>
+          <a
+            href={homepage}
+            target="_blank"
+            rel="noreferrer"
+            className="button button__main"
+          >
+            <div className="inner">marvel.com</div>
           </a>
-          <a href={wiki} className="button button__secondary">
+          <a
+            href={wiki}
+            target="_blank"
+            rel="noreferrer"
+            className="button button__secondary"
+          >
             <div className="inner">Wiki</div>
           </a>
         </div>
